@@ -80,7 +80,7 @@ class ViewController: UIViewController {
         setUp()
         addPeriodicTimeObserver()
         
-        musicSlider.addTarget(self, action: #selector(onSliderValueChanged), for: .valueChanged)
+        musicSlider.addTarget(self, action: #selector(onSliderValueChanged), for: .touchUpInside)
     }
     
 }
