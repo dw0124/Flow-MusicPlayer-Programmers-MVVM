@@ -135,6 +135,8 @@ extension ViewController {
             self?.currentTimeLabel.text = formattedDuration
             
             self?.updateSlider()
+            
+            print(formattedDuration)
         }
     }
 }
