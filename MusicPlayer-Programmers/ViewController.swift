@@ -13,27 +13,26 @@ import AVFoundation
 @available(iOS 13.0, *)
 class ViewController: UIViewController {
     
+    var songs = Songs(singer: "", album: "", title: "", duration: 0, image: "", file: "", lyrics: "")
+    var lyrics = [String: String]()
+    let formatter = DateComponentsFormatter()
+    
     var player: AVPlayer?
     var playerItem:AVPlayerItem?
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var totalTimeLabel: UILabel!
     @IBOutlet weak var currentTimeLabel: UILabel!
+    @IBOutlet weak var lyricLabel: UILabel!
     @IBOutlet weak var playerButtonState: UIButton!
     @IBOutlet weak var musicSlider: UISlider!
     
-    var songs = Songs(singer: "", album: "", title: "", duration: 0, image: "", file: "", lyrics: "")
-    let formatter = DateComponentsFormatter()
-    
     @IBAction func playerButton(_ sender: Any) {
-        
         let duration : CMTime = (playerItem?.currentTime())!
         let seconds: Double = CMTimeGetSeconds(duration)
-//        let formattedDuration = formatter.string(from: seconds) ?? "00:00"
         let formattedDuration = formatter.string(from: seconds) ?? "00:00"
         
         currentTimeLabel.text = formattedDuration
-        
         
         playerButtonState.isSelected.toggle()
         
@@ -54,7 +53,7 @@ class ViewController: UIViewController {
         playerButtonState.setImage(UIImage(systemName: "pause"), for: .highlighted)
         playerButtonState.setImage(UIImage(systemName: "pause"), for: .selected)
         
-        // DateFormatter
+        // DateComponentsFormatter
         formatter.allowedUnits = [.minute, .second]
         formatter.unitsStyle = .positional
         formatter.zeroFormattingBehavior = .pad
@@ -99,6 +98,14 @@ extension ViewController {
         let formattedDuration = formatter.string(from: seconds) ?? "00:00"
         currentTimeLabel.text = "00:00"
         totalTimeLabel.text = formattedDuration
+        
+        // 노래 가사
+        songs.lyrics.split(separator: "\n").forEach {
+            let parts = $0.dropFirst().split(separator: "]").map { String($0) }
+            let time = String(parts[0].prefix(5))
+            let lyric = parts[1]
+            lyrics[time] = lyric
+        }
     }
     
     @objc func onSliderValueChanged(_ sender: UISlider) {
@@ -123,6 +130,19 @@ extension ViewController {
         musicSlider.setValue(value, animated: true)
     }
     
+    private func updateLyric() {
+        guard let currentItem = self.player?.currentItem else {
+            return
+        }
+        let currentTime = currentItem.currentTime().seconds
+        let formattedTime = self.formatter.string(from: currentTime) ?? "00:00"
+        
+        if lyrics[formattedTime] != nil {
+            lyricLabel.text = lyrics[formattedTime]
+        }
+        
+    }
+    
     // 1초마다 addPeriodicTimeObserver(forInterval:queue:)를 통해 currentTimeLabel 변경
     private func addPeriodicTimeObserver() {
         let interval = CMTime(value: 1, timescale: 1)
@@ -131,12 +151,11 @@ extension ViewController {
                 return
             }
             let currentTime = currentItem.currentTime().seconds
-            let formattedDuration = self?.formatter.string(from: currentTime) ?? "00:00"
-            self?.currentTimeLabel.text = formattedDuration
+            let formattedTime = self?.formatter.string(from: currentTime) ?? "00:00"
+            self?.currentTimeLabel.text = formattedTime
             
             self?.updateSlider()
-            
-            print(formattedDuration)
+            self?.updateLyric()
         }
     }
 }

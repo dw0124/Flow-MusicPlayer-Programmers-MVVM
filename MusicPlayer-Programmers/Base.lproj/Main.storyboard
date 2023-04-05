@@ -47,10 +47,17 @@
                                     <action selector="playerButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gW7-Vt-VuH"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9zt-em-PcV">
+                                <rect key="frame" x="30" y="415" width="333" height="0.0"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="9zt-em-PcV" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="5CH-GA-Lan"/>
                             <constraint firstItem="RF2-07-c9e" firstAttribute="bottom" secondItem="Hmx-CG-LoP" secondAttribute="bottom" id="Cfe-Rf-BYu"/>
                             <constraint firstItem="RF2-07-c9e" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="42" id="IuB-r4-GRb"/>
                             <constraint firstItem="RC2-gP-a3i" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="5" id="Ls1-MQ-WyL"/>
@@ -59,12 +66,15 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="RC2-gP-a3i" secondAttribute="trailing" constant="5" id="WNR-JE-lPq"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Hmx-CG-LoP" secondAttribute="trailing" constant="33" id="Zn0-Lb-m2v"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="RC2-gP-a3i" secondAttribute="bottom" constant="276" id="aiG-Cq-uHL"/>
+                            <constraint firstItem="qzS-Ah-4OJ" firstAttribute="top" secondItem="9zt-em-PcV" secondAttribute="bottom" constant="47" id="etv-tg-m2W"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="9zt-em-PcV" secondAttribute="trailing" constant="30" id="p77-2C-QHU"/>
                             <constraint firstItem="qzS-Ah-4OJ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wAz-co-oCb"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="currentTimeLabel" destination="RF2-07-c9e" id="Q82-iJ-e0q"/>
                         <outlet property="imageView" destination="hGW-gN-hKL" id="Ji8-Hh-i3k"/>
+                        <outlet property="lyricLabel" destination="9zt-em-PcV" id="HzH-Gv-xqX"/>
                         <outlet property="musicSlider" destination="RC2-gP-a3i" id="HSt-KG-kee"/>
                         <outlet property="playerButtonState" destination="qzS-Ah-4OJ" id="Wff-Vu-Qae"/>
                         <outlet property="totalTimeLabel" destination="Hmx-CG-LoP" id="IiQ-BM-3yg"/>
