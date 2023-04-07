@@ -21,9 +21,6 @@ class WebService {
             guard let data = data else {
                 return
             }
-            
-            print(data)
-            
             do{
                 let apiResponse = try JSONDecoder().decode(T.self, from: data)
                     completion(apiResponse)

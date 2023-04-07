@@ -8,8 +8,6 @@
 import UIKit
 import AVFoundation
 
-
-
 @available(iOS 13.0, *)
 class ViewController: UIViewController {
     
@@ -26,6 +24,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var lyricLabel: UILabel!
     @IBOutlet weak var playerButtonState: UIButton!
     @IBOutlet weak var musicSlider: UISlider!
+    
+    @IBOutlet weak var testLabel: UILabel!
     
     @IBAction func playerButton(_ sender: Any) {
         let duration : CMTime = (playerItem?.currentTime())!
@@ -69,6 +69,8 @@ class ViewController: UIViewController {
                 }
             }
         }
+        
+        
         
     }
     
@@ -156,6 +158,62 @@ extension ViewController {
             
             self?.updateSlider()
             self?.updateLyric()
+            self?.updateCurrentTime(time: formattedTime)
         }
     }
+    
+    func updateCurrentTime(time: String) {
+        // 현재 노래의 재생 시간이 변경될 때마다 Notification을 보냅니다.
+        NotificationCenter.default.post(name: Notification.Name("UpdateCurrentTimeNotification"), object: nil, userInfo: ["currentTime": time])
+    }
+    
+    @objc func didSelectCell(_ notification: Notification) {
+        guard let selectedData = notification.object as? String else { return }
+        
+        let timeComponents = selectedData.components(separatedBy: ":")
+        let minutes = Int(timeComponents[0]) ?? 0
+        let seconds = Int(timeComponents[1]) ?? 0
+
+        let timeInSeconds = Double(minutes * 60 + seconds)
+        let time = CMTime(seconds: timeInSeconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        player?.currentItem?.seek(to: time)
+        
+        // 선택한 셀의 정보를 이용하여 UI 업데이트 등 필요한 작업 수행
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let destination = segue.destination as? LyricsViewController else {
+            return
+        }
+        destination.currentTIme = self.currentTimeLabel.text ?? "00:00"
+        destination.lyrics = self.lyrics
+        destination.delegate = self
+    }
 }
+
+@available(iOS 13.0, *)
+extension ViewController: LyricSelectionDelegate {
+    func didSelectLyric(_ time: String) {
+        
+        let lyricsVC = LyricsViewController()
+        lyricsVC.delegate = self
+        self.testLabel.text = time
+        
+        print(time)
+
+        let timeComponents = time.components(separatedBy: ":")
+        let minutes = Int(timeComponents[0]) ?? 0
+        let seconds = Int(timeComponents[1]) ?? 0
+
+        let timeInSeconds = Double(minutes * 60 + seconds)
+        let time = CMTime(seconds: timeInSeconds, preferredTimescale: 1)
+
+        player?.currentItem?.seek(to: time)
+
+    }
+}
+
+
+
+
+
