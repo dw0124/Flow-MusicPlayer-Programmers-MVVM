@@ -24,8 +24,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var lyricLabel: UILabel!
     @IBOutlet weak var playerButtonState: UIButton!
     @IBOutlet weak var musicSlider: UISlider!
-    
-    @IBOutlet weak var testLabel: UILabel!
+    @IBOutlet weak var albumLabel: UILabel!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var singerLabel: UILabel!
     
     @IBAction func playerButton(_ sender: Any) {
         let duration : CMTime = (playerItem?.currentTime())!
@@ -101,6 +102,10 @@ extension ViewController {
         currentTimeLabel.text = "00:00"
         totalTimeLabel.text = formattedDuration
         
+        albumLabel.text = songs.album
+        titleLabel.text = songs.title
+        singerLabel.text = songs.singer
+        
         // 노래 가사
         songs.lyrics.split(separator: "\n").forEach {
             let parts = $0.dropFirst().split(separator: "]").map { String($0) }
@@ -163,22 +168,8 @@ extension ViewController {
     }
     
     func updateCurrentTime(time: String) {
-        // 현재 노래의 재생 시간이 변경될 때마다 Notification을 보냅니다.
+        // 현재 노래의 재생 시간이 변경될 때마다 Notification을 실행
         NotificationCenter.default.post(name: Notification.Name("UpdateCurrentTimeNotification"), object: nil, userInfo: ["currentTime": time])
-    }
-    
-    @objc func didSelectCell(_ notification: Notification) {
-        guard let selectedData = notification.object as? String else { return }
-        
-        let timeComponents = selectedData.components(separatedBy: ":")
-        let minutes = Int(timeComponents[0]) ?? 0
-        let seconds = Int(timeComponents[1]) ?? 0
-
-        let timeInSeconds = Double(minutes * 60 + seconds)
-        let time = CMTime(seconds: timeInSeconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        player?.currentItem?.seek(to: time)
-        
-        // 선택한 셀의 정보를 이용하여 UI 업데이트 등 필요한 작업 수행
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -197,7 +188,7 @@ extension ViewController: LyricSelectionDelegate {
         
         let lyricsVC = LyricsViewController()
         lyricsVC.delegate = self
-        self.testLabel.text = time
+        self.titleLabel.text = time
         
         print(time)
 

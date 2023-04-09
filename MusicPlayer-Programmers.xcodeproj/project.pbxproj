@@ -11,6 +11,7 @@
 		BE0CFA7C29DAAAA400E03BD5 /* WebService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0CFA7B29DAAAA400E03BD5 /* WebService.swift */; };
 		BE65BB2B29DE95B900271D68 /* LyricsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE65BB2A29DE95B900271D68 /* LyricsViewController.swift */; };
 		BE65BB2D29DEA0FD00271D68 /* LyricTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE65BB2C29DEA0FD00271D68 /* LyricTableViewCell.swift */; };
+		BE65BB2F29E29DDE00271D68 /* Singletone.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE65BB2E29E29DDE00271D68 /* Singletone.swift */; };
 		BE69981129DA9CEC00875485 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE69981029DA9CEC00875485 /* AppDelegate.swift */; };
 		BE69981329DA9CEC00875485 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE69981229DA9CEC00875485 /* SceneDelegate.swift */; };
 		BE69981529DA9CEC00875485 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE69981429DA9CEC00875485 /* ViewController.swift */; };
@@ -24,6 +25,7 @@
 		BE0CFA7B29DAAAA400E03BD5 /* WebService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebService.swift; sourceTree = "<group>"; };
 		BE65BB2A29DE95B900271D68 /* LyricsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsViewController.swift; sourceTree = "<group>"; };
 		BE65BB2C29DEA0FD00271D68 /* LyricTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricTableViewCell.swift; sourceTree = "<group>"; };
+		BE65BB2E29E29DDE00271D68 /* Singletone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Singletone.swift; sourceTree = "<group>"; };
 		BE69980D29DA9CEC00875485 /* MusicPlayer-Programmers.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MusicPlayer-Programmers.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE69981029DA9CEC00875485 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BE69981229DA9CEC00875485 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 				BE69981929DA9CEE00875485 /* Assets.xcassets */,
 				BE69981B29DA9CEE00875485 /* LaunchScreen.storyboard */,
 				BE69981E29DA9CEE00875485 /* Info.plist */,
+				BE65BB2E29E29DDE00271D68 /* Singletone.swift */,
 			);
 			path = "MusicPlayer-Programmers";
 			sourceTree = "<group>";
@@ -169,6 +172,7 @@
 				BE65BB2B29DE95B900271D68 /* LyricsViewController.swift in Sources */,
 				BE0CFA7A29DAA9E100E03BD5 /* Songs.swift in Sources */,
 				BE69981529DA9CEC00875485 /* ViewController.swift in Sources */,
+				BE65BB2F29E29DDE00271D68 /* Singletone.swift in Sources */,
 				BE69981129DA9CEC00875485 /* AppDelegate.swift in Sources */,
 				BE0CFA7C29DAAAA400E03BD5 /* WebService.swift in Sources */,
 				BE69981329DA9CEC00875485 /* SceneDelegate.swift in Sources */,

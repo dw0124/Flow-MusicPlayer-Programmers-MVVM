@@ -14,6 +14,13 @@ protocol LyricSelectionDelegate: AnyObject {
 class LyricsViewController: UIViewController {
     
     @IBOutlet weak var lyricsTableView: UITableView!
+    @IBOutlet weak var lyricsSwitch: UISwitch!
+    @IBAction func lyricsViewDismissButton(_ sender: Any) {
+        self.dismiss(animated: true)
+    }
+    @IBAction func lyricSwitchValueChanged(_ sender: Any) {
+        Singletone.shared.switchState = self.lyricsSwitch.isOn
+    }
     
     var currentTIme: String = "00:00"
     var lyrics = [String: String]()
@@ -26,13 +33,17 @@ class LyricsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         lyricsTableView.delegate = self
         lyricsTableView.dataSource = self
+        
+        let singletone = Singletone.shared
+        self.lyricsSwitch.isOn = singletone.switchState ?? true
         
         sortedLyrics = lyrics.sorted() { $0.key < $1.key }.map { $0.value }
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleNotification), name: Notification.Name("UpdateCurrentTimeNotification"), object: nil)
-        
+    
         
     }
 
@@ -79,9 +90,13 @@ extension LyricsViewController {
 extension LyricsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let selectedTime = lyrics.sorted { $0.key < $1.key }[indexPath.row].key
-        delegate?.didSelectLyric(selectedTime)
-        self.dismiss(animated: true)
+        if lyricsSwitch.isOn == false {
+            self.dismiss(animated: true)
+        }else {
+            let selectedTime = lyrics.sorted { $0.key < $1.key }[indexPath.row].key
+            delegate?.didSelectLyric(selectedTime)
+            //self.dismiss(animated: true)
+        }
     }
 }
 
