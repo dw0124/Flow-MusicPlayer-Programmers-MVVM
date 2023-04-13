@@ -27,7 +27,7 @@ import Foundation
 //    let lyrics: String
 //}
 
-struct Songs: Codable {
+struct Music: Codable {
     var singer, album, title: String
     var duration: Int
     var image: String

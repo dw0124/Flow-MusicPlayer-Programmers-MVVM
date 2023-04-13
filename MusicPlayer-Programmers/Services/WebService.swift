@@ -31,7 +31,7 @@ class WebService {
         dataTask.resume()
     }
     
-    func updatePhoto(with url: URL, completion: @escaping (UIImage) -> ()) {
+    func updatePhoto(with url: URL, completion: @escaping (Data) -> ()) {
         
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             
@@ -40,11 +40,11 @@ class WebService {
                 return
             }
             
-            guard let data = data , let image = UIImage(data: data) else {
+            guard let data = data else {
                 return
             }
             
-            completion(image)
+            completion(data)
             
         }.resume()
     }
