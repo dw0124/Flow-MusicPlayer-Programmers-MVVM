@@ -10,7 +10,7 @@ import Foundation
 class Singletone {
     static let shared = Singletone()
     
-    var switchState: Bool?
+    var switchState: Bool = true
     
     private init() { }
 }

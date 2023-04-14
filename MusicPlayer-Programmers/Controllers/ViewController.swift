@@ -75,6 +75,7 @@ extension ViewController {
             let currentTime = currentItem.currentTime().seconds
             let formattedTime = self.musicPlayerVM.formatter.string(from: currentTime) ?? "00:00"
             self.currentTimeLabel.text = formattedTime
+            self.musicPlayerVM.updateCurrentTime(time: formattedTime)
             
             // update Slider
             self.musicPlayerVM.updateSlider()
@@ -90,11 +91,14 @@ extension ViewController {
     
 }
 
-//@available(iOS 13.0, *)
-//extension ViewController {
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        guard let destination = segue.destination as? LyricsViewController else {
-//            return
-//        }
-//    }
-//}
+@available(iOS 13.0, *)
+extension ViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let destination = segue.destination as? LyricsViewController else {
+            return
+        }
+        destination.lyricsVM = LyricsViewModel(lyricsDic: musicPlayerVM.lyricsDic)
+        destination.musicPlayerVM = self.musicPlayerVM
+        //destination.lyricsDic = musicPlayerVM.lyricsDic
+    }
+}

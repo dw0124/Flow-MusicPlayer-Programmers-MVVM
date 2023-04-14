@@ -98,14 +98,11 @@ class MusicPlayerViewModel {
     // MARK: - update Method
     func updateSlider() {
         var value: Float = 0
-        
         if let currentTime = player?.currentTime(), let duration = playerItem?.duration {
             let currentTimeSeconds = CMTimeGetSeconds(currentTime)
             let durationSeconds = CMTimeGetSeconds(duration)
             value = Float(currentTimeSeconds / durationSeconds)
-            
         }
-        
         currentSliderValue = value
     }
     
@@ -119,6 +116,11 @@ class MusicPlayerViewModel {
         }
     }
     
+    func updateCurrentTime(time: String) {
+        // 현재 노래의 재생 시간이 변경될 때마다 Notification을 실행
+        NotificationCenter.default.post(name: Notification.Name("UpdateCurrentTimeNotification"), object: nil, userInfo: ["currentTime": time])
+    }
+    
     @objc func onSliderValueChanged(_ sender: UISlider) {
         let value = sender.value
         guard let duration = self.playerItem?.duration else {
@@ -130,4 +132,5 @@ class MusicPlayerViewModel {
         // 현재 재생 시간을 지정한 시간으로 변경 AVPlayerItem.seek(to:)
         self.player?.seek(to: seekTime)
     }
+    
 }

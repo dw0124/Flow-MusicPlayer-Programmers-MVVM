@@ -7,9 +7,16 @@
 
 import Foundation
 
-// Lyric들을 받아와서 테이블 뷰에 전달?
-struct LyricsViewModel {
-    var Lyrics: [String]
+class LyricsViewModel {
+    var lyricsDic = [String: String]()
+    var sortedLyrics = [String]()
+    var highlitedLyricIndex = 0
+    var lyricIndex = 0
+    
+    init(lyricsDic: [String : String]) {
+        self.lyricsDic = lyricsDic
+        self.sortedLyrics = lyricsDic.sorted() { $0.key < $1.key }.map { $0.value }
+    }
 }
 
 extension LyricsViewModel {
@@ -19,11 +26,11 @@ extension LyricsViewModel {
     }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
-        return self.Lyrics.count
+        return self.sortedLyrics.count
     }
     
     func LyricAtIndex(_ index: Int) -> LyricViewModel {
-        let Lyric = self.Lyrics[index]
+        let Lyric = self.sortedLyrics[index]
         return LyricViewModel(Lyric)
     }
     
