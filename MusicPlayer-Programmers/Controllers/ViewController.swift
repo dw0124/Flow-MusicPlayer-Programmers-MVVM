@@ -41,6 +41,8 @@ class ViewController: UIViewController {
         
         setUp()
         addPeriodicTimeObserver()
+        
+        musicSlider.addTarget(musicPlayerVM, action: #selector(musicPlayerVM.onSliderValueChanged(_:)), for: .touchUpInside)
     }
 }
 
@@ -85,6 +87,7 @@ extension ViewController {
         }
         
     }
+    
 }
 
 //@available(iOS 13.0, *)

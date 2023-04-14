@@ -54,7 +54,7 @@ class MusicPlayerViewModel {
     }
     
     
-    // MARK: - Initialize
+    // MARK: - Init
     init(url: String) {
         getSong(url: url)
         
@@ -110,16 +110,24 @@ class MusicPlayerViewModel {
     }
     
     func updateLyric() {
-        
-        guard let currentItem = self.player?.currentItem else {
-            return
-        }
+        guard let currentItem = self.player?.currentItem else { return }
         let currentTime = currentItem.currentTime().seconds
         let formattedTime = self.formatter.string(from: currentTime) ?? "00:00"
         
         if lyricsDic[formattedTime] != nil {
             currentLyric = lyricsDic[formattedTime]!
         }
-            
+    }
+    
+    @objc func onSliderValueChanged(_ sender: UISlider) {
+        let value = sender.value
+        guard let duration = self.playerItem?.duration else {
+            return
+        }
+        let durationSeconds = CMTimeGetSeconds(duration)
+        let seekTime = CMTime(seconds: durationSeconds * Double(value), preferredTimescale: 1000)
+        
+        // 현재 재생 시간을 지정한 시간으로 변경 AVPlayerItem.seek(to:)
+        self.player?.seek(to: seekTime)
     }
 }
