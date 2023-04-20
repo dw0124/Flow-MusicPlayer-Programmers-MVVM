@@ -39,11 +39,11 @@ class ViewController: UIViewController {
         
         
         musicPlayerVM.bindingViewModel = { [weak self] in
-            guard let self else { return }
+            guard let self = self else { return }
             print("jhkim: \(self.musicPlayerVM.music)")
             self.setupDI(self.musicPlayerVM.music)
         }
-        
+        musicPlayerVM.bindingViewModel()
     }
 }
 
@@ -65,7 +65,6 @@ extension ViewController {
             self.totalTimeLabel.text = formattedDuration
         }
     }
-    
     
     func playButtonSetUp() {
         playerButtonState.setImage(UIImage(systemName: "play.fill"), for: .normal)
