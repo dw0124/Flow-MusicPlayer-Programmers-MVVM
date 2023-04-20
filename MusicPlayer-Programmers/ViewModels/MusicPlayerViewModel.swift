@@ -11,7 +11,9 @@ import UIKit
 
 class MusicPlayerViewModel {
     
-    var music: Music!
+    var bindingViewModel : (() -> Void) = {}
+    
+    var music: Music = Music(singer: "d", album: "d", title: "d", duration: 5, image: "", file: "", lyrics: "")
     
     var formatter = DateComponentsFormatter()
     var player: AVPlayer?
@@ -23,36 +25,11 @@ class MusicPlayerViewModel {
     var currentSliderValue: Float = 0
     
     // MARK: Computed properties
-    var album: String {
-        return music.album
-    }
-    
-    var title: String {
-        return music.title
-    }
-    
-    var singer: String {
-        return music.singer
-    }
-    
-    var musicFileUrl: String {
-        return music.file
-    }
-    
-    var lyrics: String {
-        return music.lyrics
-    }
-    
-    var duration: Int {
-        return music.duration
-    }
-    
     var isPlaying: Bool = false {
         didSet {
             isPlaying == true ? player?.play() : player?.pause()
         }
     }
-    
     
     // MARK: - Init
     init(url: String) {
@@ -81,12 +58,13 @@ class MusicPlayerViewModel {
                 }
                 // Lyric
                 self.getLyric()
+                
+                self.bindingViewModel()
             }
         }
     }
     
-    func getLyric() {
-        // 노래 가사
+    func getLyric() { // 노래 가사
         music.lyrics.split(separator: "\n").forEach {
             let parts = $0.dropFirst().split(separator: "]").map { String($0) }
             let time = String(parts[0].prefix(5))
@@ -116,8 +94,8 @@ class MusicPlayerViewModel {
         }
     }
     
+    // 현재 노래의 재생 시간이 변경될 때마다 Notification을 실행
     func updateCurrentTime(time: String) {
-        // 현재 노래의 재생 시간이 변경될 때마다 Notification을 실행
         NotificationCenter.default.post(name: Notification.Name("UpdateCurrentTimeNotification"), object: nil, userInfo: ["currentTime": time])
     }
     

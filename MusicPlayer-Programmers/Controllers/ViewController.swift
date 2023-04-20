@@ -11,7 +11,7 @@ import AVFoundation
 @available(iOS 13.0, *)
 class ViewController: UIViewController {
     
-    private var musicPlayerVM: MusicPlayerViewModel!
+    private var musicPlayerVM: MusicPlayerViewModel = MusicPlayerViewModel(url: "https://grepp-programmers-challenges.s3.ap-northeast-2.amazonaws.com/2020-flo/song.json")
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var totalTimeLabel: UILabel!
@@ -32,36 +32,45 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // 초기화
-        musicPlayerVM = MusicPlayerViewModel(url: "https://grepp-programmers-challenges.s3.ap-northeast-2.amazonaws.com/2020-flo/song.json")
-        
-    }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        setUp()
+        playButtonSetUp()
         addPeriodicTimeObserver()
         
         musicSlider.addTarget(musicPlayerVM, action: #selector(musicPlayerVM.onSliderValueChanged(_:)), for: .touchUpInside)
+        
+        
+        musicPlayerVM.bindingViewModel = { [weak self] in
+            guard let self else { return }
+            print("jhkim: \(self.musicPlayerVM.music)")
+            self.setupDI(self.musicPlayerVM.music)
+        }
+        
     }
 }
 
 @available(iOS 13.0, *)
 extension ViewController {
     
-    func setUp() {
-        // PlayButton
+    /// 비동기적으로 데이터를 받아왔기 때문에 메인 쓰레드에서 UI 작업을 수행한다.
+    func setupDI(_ data: Music) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            let formattedDuration = self.musicPlayerVM.formatter.string(from: Double(data.duration)) ?? "00:00"
+            self.albumLabel.text = data.album
+            self.titleLabel.text = data.title
+            self.singerLabel.text = data.singer
+            
+            if let imageData = self.musicPlayerVM.imageData {
+                self.imageView.image = UIImage(data: imageData)
+            }
+            self.totalTimeLabel.text = formattedDuration
+        }
+    }
+    
+    
+    func playButtonSetUp() {
         playerButtonState.setImage(UIImage(systemName: "play.fill"), for: .normal)
         playerButtonState.setImage(UIImage(systemName: "pause"), for: .highlighted)
         playerButtonState.setImage(UIImage(systemName: "pause"), for: .selected)
-        
-        // Music UI
-        let formattedDuration = musicPlayerVM.formatter.string(from: Double(musicPlayerVM.duration)) ?? "00:00"
-        self.albumLabel.text = musicPlayerVM.album
-        self.titleLabel.text = musicPlayerVM.title
-        self.singerLabel.text = musicPlayerVM.singer
-        self.imageView.image = UIImage(data: musicPlayerVM.imageData!)
-        self.totalTimeLabel.text = formattedDuration
     }
     
     // 1초마다 addPeriodicTimeObserver(forInterval:queue:)를 통해 변경
@@ -84,9 +93,7 @@ extension ViewController {
             // update Lyric
             self.musicPlayerVM.updateLyric()
             self.lyricLabel.text = self.musicPlayerVM.currentLyric
-            
         }
-        
     }
     
 }
