@@ -11,6 +11,7 @@ import UIKit
 
 class MusicPlayerViewModel {
     
+    /// 네트워크 파싱 후 View로 완료했다는 것을 전달하기 위한 클로저
     var bindingViewModel : (() -> Void) = {}
     
     var music: Music = Music(singer: "d", album: "d", title: "d", duration: 5, image: "", file: "", lyrics: "")
