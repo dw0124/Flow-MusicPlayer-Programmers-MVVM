@@ -31,76 +31,9 @@
                     <view key="view" contentMode="scaleToFill" id="15b-zm-ujm">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" spacing="255" translatesAutoresizingMaskIntoConstraints="NO" id="8vs-8G-IFI">
-                                <rect key="frame" x="15" y="15" width="384" height="34.5"/>
-                                <subviews>
-                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4f5-ig-mdy">
-                                        <rect key="frame" x="0.0" y="0.0" width="51" height="34.5"/>
-                                        <connections>
-                                            <action selector="lyricSwitchValueChanged:" destination="dfB-hU-mI5" eventType="valueChanged" id="3av-pT-ZZy"/>
-                                        </connections>
-                                    </switch>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qyQ-86-f32">
-                                        <rect key="frame" x="304" y="0.0" width="80" height="34.5"/>
-                                        <buttonConfiguration key="configuration" style="plain" image="xmark" catalog="system" title=""/>
-                                        <connections>
-                                            <action selector="lyricsViewDismissButton:" destination="dfB-hU-mI5" eventType="touchUpInside" id="N5c-Kc-aTw"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="34.5" id="RsL-xx-seL"/>
-                                </constraints>
-                            </stackView>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="dOH-sq-HkD">
-                                <rect key="frame" x="0.0" y="49.5" width="414" height="812.5"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="lyricCell" id="cHH-zB-vbq" customClass="LyricTableViewCell" customModule="MusicPlayer_Programmers" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="50" width="414" height="42.5"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="cHH-zB-vbq" id="K1l-LK-QBR">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="42.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cmg-G3-01F">
-                                                    <rect key="frame" x="20" y="11" width="374" height="20.5"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="cmg-G3-01F" firstAttribute="top" secondItem="K1l-LK-QBR" secondAttribute="topMargin" id="HUt-dx-hwM"/>
-                                                <constraint firstItem="cmg-G3-01F" firstAttribute="leading" secondItem="K1l-LK-QBR" secondAttribute="leadingMargin" id="I0d-RP-srS"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="cmg-G3-01F" secondAttribute="bottom" id="WzJ-Vm-ARH"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="cmg-G3-01F" secondAttribute="trailing" id="tCv-qT-BJi"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <outlet property="lyricLabel" destination="cmg-G3-01F" id="frT-XQ-QtN"/>
-                                        </connections>
-                                    </tableViewCell>
-                                </prototypes>
-                            </tableView>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="vBQ-oC-j5k"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="8vs-8G-IFI" firstAttribute="leading" secondItem="vBQ-oC-j5k" secondAttribute="leading" constant="15" id="3fV-BC-46f"/>
-                            <constraint firstItem="vBQ-oC-j5k" firstAttribute="bottom" secondItem="dOH-sq-HkD" secondAttribute="bottom" id="DcL-EP-f4h"/>
-                            <constraint firstItem="vBQ-oC-j5k" firstAttribute="trailing" secondItem="8vs-8G-IFI" secondAttribute="trailing" constant="15" id="ETh-dC-wmK"/>
-                            <constraint firstItem="dOH-sq-HkD" firstAttribute="top" secondItem="8vs-8G-IFI" secondAttribute="bottom" id="Ei4-6v-gkU"/>
-                            <constraint firstItem="vBQ-oC-j5k" firstAttribute="trailing" secondItem="dOH-sq-HkD" secondAttribute="trailing" id="Vm7-MP-c8F"/>
-                            <constraint firstItem="dOH-sq-HkD" firstAttribute="leading" secondItem="vBQ-oC-j5k" secondAttribute="leading" id="i2t-y2-7Xv"/>
-                            <constraint firstItem="8vs-8G-IFI" firstAttribute="top" secondItem="15b-zm-ujm" secondAttribute="top" constant="15" id="wid-f9-DXA"/>
-                        </constraints>
                     </view>
-                    <connections>
-                        <outlet property="lyricsSwitch" destination="4f5-ig-mdy" id="1Sm-wO-5gX"/>
-                        <outlet property="lyricsTableView" destination="dOH-sq-HkD" id="hA9-n5-qLb"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sWJ-N2-4Lx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -123,7 +56,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="xmark" catalog="system" width="128" height="113"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
