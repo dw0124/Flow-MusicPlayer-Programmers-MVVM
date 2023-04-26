@@ -8,6 +8,7 @@
 import UIKit
 import Foundation
 import AVFoundation
+import SnapKit
 
 class LyricsViewController: UIViewController {
     
@@ -17,21 +18,28 @@ class LyricsViewController: UIViewController {
     var lyricsDic = [String: String]()
     var sortedLyrics = [String]()
     
-    @IBOutlet weak var lyricsTableView: UITableView!
-    @IBOutlet weak var lyricsSwitch: UISwitch!
+    let containerView = UIView()
+    let lyricsTableView = UITableView()
+    let lyricsSwitch = UISwitch()
+    let dismissButton = UIButton()
     
-    @IBAction func lyricsViewDismissButton(_ sender: Any) {
+    @objc func lyricsViewDismissButton(_ sender: Any) {
         self.dismiss(animated: true)
     }
-    @IBAction func lyricSwitchValueChanged(_ sender: Any) {
-        Singletone.shared.switchState.toggle()
-    }
     
+    @objc func lyricSwitchValueChanged(_ sender: UISwitch) {
+        Singletone.shared.switchState = sender.isOn
+    }
+
+    // MARK: ViewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        lyricsTableView.register(LyricTableViewCell.self, forCellReuseIdentifier: LyricTableViewCell.identifier)
         lyricsTableView.delegate = self
         lyricsTableView.dataSource = self
+        
+        setUI()
         
         if let lyricsVM = lyricsVM {
             lyricsDic = lyricsVM.lyricsDic
@@ -64,10 +72,10 @@ extension LyricsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "lyricCell") as? LyricTableViewCell else  { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: LyricTableViewCell.identifier) as? LyricTableViewCell else { return UITableViewCell() }
         
         cell.lyricLabel.text = lyricsVM?.sortedLyrics[indexPath.row]
-        
+  
         return cell
     }
 }
@@ -111,6 +119,43 @@ extension LyricsViewController {
         // Notification에 포함된 userInfo에서 시간 정보를 가져와서 뷰를 업데이트
         if let currentTime = notification.userInfo?["currentTime"] as? String {
             highlightLyrics(for: currentTime)
+        }
+    }
+}
+
+// MARK: - SetUI
+extension LyricsViewController {
+    func setUI() {
+        
+        view.addSubview(containerView)
+        containerView.addSubview(lyricsSwitch)
+        containerView.addSubview(dismissButton)
+        view.addSubview(lyricsTableView)
+       
+        dismissButton.setImage(UIImage(systemName: "xmark"), for: .normal)
+        dismissButton.setTitleColor(.black, for: .normal)
+        dismissButton.addTarget(self, action: #selector(lyricsViewDismissButton(_:)), for: .touchUpInside)
+        
+        lyricsSwitch.addTarget(self, action: #selector(lyricSwitchValueChanged(_:)), for: .valueChanged)
+        
+        containerView.snp.makeConstraints {
+          $0.top.leading.trailing.equalToSuperview()
+          $0.height.equalTo(50) // 버튼 높이를 고정한다면 필요한 코드입니다.
+        }
+        
+        lyricsSwitch.snp.makeConstraints {
+          $0.centerY.equalToSuperview()
+          $0.leading.equalToSuperview().inset(16)
+        }
+        
+        dismissButton.snp.makeConstraints {
+          $0.centerY.equalToSuperview()
+          $0.trailing.equalToSuperview().inset(16)
+        }
+        
+        lyricsTableView.snp.makeConstraints {
+            $0.top.equalTo(containerView.snp.bottom)
+            $0.leading.bottom.trailing.equalToSuperview()
         }
     }
 }
