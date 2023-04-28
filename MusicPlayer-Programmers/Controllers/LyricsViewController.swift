@@ -35,18 +35,14 @@ class LyricsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        lyricsTableView.register(LyricTableViewCell.self, forCellReuseIdentifier: LyricTableViewCell.identifier)
-        lyricsTableView.delegate = self
-        lyricsTableView.dataSource = self
-        
         setUI()
+        
+        lyricsSwitch.isOn = Singletone.shared.switchState
         
         if let lyricsVM = lyricsVM {
             lyricsDic = lyricsVM.lyricsDic
             sortedLyrics = lyricsVM.sortedLyrics
         }
-        
-        lyricsSwitch.isOn = Singletone.shared.switchState
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleNotification), name: Notification.Name("UpdateCurrentTimeNotification"), object: nil)
     }
@@ -126,6 +122,12 @@ extension LyricsViewController {
 // MARK: - SetUI
 extension LyricsViewController {
     func setUI() {
+        
+        view.backgroundColor = .white
+        
+        lyricsTableView.register(LyricTableViewCell.self, forCellReuseIdentifier: LyricTableViewCell.identifier)
+        lyricsTableView.delegate = self
+        lyricsTableView.dataSource = self
         
         view.addSubview(containerView)
         containerView.addSubview(lyricsSwitch)

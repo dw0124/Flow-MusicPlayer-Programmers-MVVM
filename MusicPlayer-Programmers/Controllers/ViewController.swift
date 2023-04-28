@@ -27,16 +27,10 @@ class ViewController: UIViewController {
     var playButtonState = true
     
     @objc func touchButton(_ sender: Any) {
-        
-        let storyboard = UIStoryboard(name: "Main", bundle: nil) // 스토리보드 이름
-        guard let vc = storyboard.instantiateViewController(withIdentifier: "LyricsViewController") as? LyricsViewController else {
-            return
-        }
-        
-        vc.lyricsVM = LyricsViewModel(lyricsDic: musicPlayerVM.lyricsDic)
-        vc.musicPlayerVM = self.musicPlayerVM
-        
-        self.present(vc, animated: true, completion: nil)
+        let lyricsVC = LyricsViewController()
+        lyricsVC.lyricsVM = LyricsViewModel(lyricsDic: musicPlayerVM.lyricsDic)
+        lyricsVC.musicPlayerVM = self.musicPlayerVM
+        self.present(lyricsVC, animated: true)
     }
     
     @objc func touchPlayButton(_ sender: Any) {
@@ -49,28 +43,29 @@ class ViewController: UIViewController {
         
         setUI()
         
-        addPeriodicTimeObserver()
-        
         slider.addTarget(musicPlayerVM, action: #selector(musicPlayerVM.onSliderValueChanged(_:)), for: .touchUpInside)
         
         musicPlayerVM.bindingViewModel = { [weak self] in
             guard let self = self else { return }
-            print("jhkim: \(self.musicPlayerVM.music)")
             self.setupDI(self.musicPlayerVM.music)
         }
         musicPlayerVM.bindingViewModel()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.addPeriodicTimeObserver()
+        }
     }
 }
 
 @available(iOS 13.0, *)
 extension ViewController {
     
-    /// 비동기적으로 데이터를 받아왔기 때문에 메인 쓰레드에서 UI 작업을 수행한다.
+    /// 비동기적으로 데이터를 받아왔기 때문에 메인 쓰레드에서 UI 작업을 수행
     func setupDI(_ data: Music) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             let formattedDuration = self.musicPlayerVM.formatter.string(from: Double(data.duration)) ?? "00:00"
-//            self.albumLabel.text = data.album
+            //self.albumLabel.text = data.album
             self.titleLabel.text = data.title
             self.singerLabel.text = data.singer
             
@@ -95,8 +90,10 @@ extension ViewController {
             self.musicPlayerVM.updateCurrentTime(time: formattedTime)
             
             // update Slider
-            self.musicPlayerVM.updateSlider()
-            self.slider.setValue(self.musicPlayerVM.currentSliderValue, animated: true)
+            if self.slider.isTracking == false {
+                self.musicPlayerVM.updateSlider()
+                self.slider.setValue(self.musicPlayerVM.currentSliderValue, animated: false)
+            }
             
             // update Lyric
             self.musicPlayerVM.updateLyric()
@@ -106,20 +103,11 @@ extension ViewController {
     
 }
 
-@available(iOS 13.0, *)
-extension ViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let destination = segue.destination as? LyricsViewController else {
-            return
-        }
-        destination.lyricsVM = LyricsViewModel(lyricsDic: musicPlayerVM.lyricsDic)
-        destination.musicPlayerVM = self.musicPlayerVM
-        //destination.lyricsDic = musicPlayerVM.lyricsDic
-    }
-}
-
 extension ViewController {
     func setUI() {
+        
+        view.backgroundColor = .white
+        
         button.setTitle("전체 가사", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.addTarget(self, action: #selector(touchButton(_:)), for: .touchUpInside)
