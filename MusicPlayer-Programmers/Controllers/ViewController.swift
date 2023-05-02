@@ -41,19 +41,17 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setUI()
-        
-        slider.addTarget(musicPlayerVM, action: #selector(musicPlayerVM.onSliderValueChanged(_:)), for: .touchUpInside)
-        
-        musicPlayerVM.bindingViewModel = { [weak self] in
-            guard let self = self else { return }
-            self.setupDI(self.musicPlayerVM.music)
-        }
-        musicPlayerVM.bindingViewModel()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+        DispatchQueue.main.async {
+            self.setUI()
+            self.musicPlayerVM.bindingViewModel = { [weak self] in
+                guard let self = self else { return }
+                self.setupDI(self.musicPlayerVM.music)
+            }
+            self.musicPlayerVM.bindingViewModel()
             self.addPeriodicTimeObserver()
         }
+        
+        slider.addTarget(musicPlayerVM, action: #selector(musicPlayerVM.onSliderValueChanged(_:)), for: .touchUpInside)
     }
 }
 
@@ -186,11 +184,11 @@ extension ViewController {
         
         totalTimeLabel.snp.makeConstraints { make in
             make.trailing.equalTo(slider.snp.trailing)
-            make.top.equalTo(slider.snp.bottom).offset(10)
+            make.top.equalTo(currentTimeLabel)
         }
         
         playButton.snp.makeConstraints { make in
-            make.top.equalTo(slider.snp.bottom).offset(20)
+            make.top.equalTo(currentTimeLabel)
             make.centerX.equalToSuperview()
         }
     }

@@ -14,7 +14,7 @@ class MusicPlayerViewModel {
     /// 네트워크 파싱 후 View로 완료했다는 것을 전달하기 위한 클로저
     var bindingViewModel: (() -> ()) = {}
     
-    var music: Music = Music(singer: "d", album: "d", title: "d", duration: 5, image: "", file: "", lyrics: "")
+    var music: Music = Music(singer: "가수", album: "앨범", title: "제목", duration: 0, image: "", file: "", lyrics: "")
     
     var formatter = DateComponentsFormatter()
     var player: AVPlayer?
@@ -24,6 +24,8 @@ class MusicPlayerViewModel {
     var lyricsDic = [String: String]()
     var currentLyric: String = ""
     var currentSliderValue: Float = 0
+    var sortedLyrics = [Dictionary<String, String>.Element]()
+    var lyricIndex = 0
     
     // MARK: Computed properties
     var isPlaying: Bool = false {
@@ -69,6 +71,7 @@ class MusicPlayerViewModel {
             let time = String(parts[0].prefix(5))
             let lyric = parts[1]
             self.lyricsDic[time] = lyric
+            sortedLyrics = lyricsDic.sorted(by: { $0.key < $1.key})
         }
     }
 
@@ -88,9 +91,17 @@ class MusicPlayerViewModel {
         let currentTime = currentItem.currentTime().seconds
         let formattedTime = self.formatter.string(from: currentTime) ?? "00:00"
         
-        if lyricsDic[formattedTime] != nil {
-            currentLyric = lyricsDic[formattedTime]!
+        for (index,lyric) in sortedLyrics.enumerated() {
+            if lyric.key == formattedTime {
+                currentLyric = lyric.value
+                lyricIndex = index
+                break
+            }
         }
+        
+//        if let lyric = lyricsDic[formattedTime] {
+//            currentLyric = lyric
+//        }
     }
     
     // 현재 노래의 재생 시간이 변경될 때마다 Notification을 실행

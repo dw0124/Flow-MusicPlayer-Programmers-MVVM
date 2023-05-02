@@ -8,13 +8,11 @@
 import Foundation
 
 class LyricsViewModel {
-    var lyricsDic = [String: String]()
     var sortedLyrics = [String]()
     var highlitedLyricIndex = 0
     var lyricIndex = 0
     
     init(lyricsDic: [String : String]) {
-        self.lyricsDic = lyricsDic
         self.sortedLyrics = lyricsDic.sorted() { $0.key < $1.key }.map { $0.value }
     }
 }

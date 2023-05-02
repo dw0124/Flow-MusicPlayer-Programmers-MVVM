@@ -39,11 +39,6 @@ class LyricsViewController: UIViewController {
         
         lyricsSwitch.isOn = Singletone.shared.switchState
         
-        if let lyricsVM = lyricsVM {
-            lyricsDic = lyricsVM.lyricsDic
-            sortedLyrics = lyricsVM.sortedLyrics
-        }
-        
         NotificationCenter.default.addObserver(self, selector: #selector(handleNotification), name: Notification.Name("UpdateCurrentTimeNotification"), object: nil)
     }
 
@@ -55,9 +50,15 @@ extension LyricsViewController: UITableViewDelegate {
         if lyricsSwitch.isOn == false {
             self.dismiss(animated: true)
         }else {
-            guard let selectedTime = lyricsVM?.lyricsDic.sorted(by: { $0.key < $1.key })[indexPath.row].key else { return }
+            guard let selectedTime = musicPlayerVM?.sortedLyrics[indexPath.row].key else { return }
+            musicPlayerVM?.lyricIndex = indexPath.row
             updateTime(selectedTime: selectedTime)
         }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let cell = tableView.dequeueReusableCell(withIdentifier: LyricTableViewCell.identifier) as! LyricTableViewCell
+        return cell.lyricLabel.intrinsicContentSize.height + 16
     }
 }
 
@@ -71,6 +72,10 @@ extension LyricsViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: LyricTableViewCell.identifier) as? LyricTableViewCell else { return UITableViewCell() }
         
         cell.lyricLabel.text = lyricsVM?.sortedLyrics[indexPath.row]
+        
+        if indexPath.row == musicPlayerVM?.lyricIndex {
+            cell.lyricLabel.textColor = .red
+        }
   
         return cell
     }
@@ -87,23 +92,16 @@ extension LyricsViewController {
         let time = CMTime(seconds: timeInSeconds, preferredTimescale: 1)
         
         musicPlayerVM?.player?.seek(to: time)
+        self.highlightLyrics(for: selectedTime)
     }
     
     func highlightLyrics(for currentTime: String) {
-        for (index,lyric) in lyricsDic.sorted(by: { $0.key < $1.key}).enumerated() {
-            if currentTime == lyric.key {
-                lyricsVM?.highlitedLyricIndex = index
-                break
-            }
-        }
-        
-        if let cell = lyricsTableView.cellForRow(at: IndexPath(row: lyricsVM?.highlitedLyricIndex ?? 0, section: 0)) as? LyricTableViewCell {
+        if let cell = lyricsTableView.cellForRow(at: IndexPath(row: musicPlayerVM?.lyricIndex ?? 0, section: 0)) as? LyricTableViewCell {
             cell.lyricLabel.textColor = .red
         }
-        
         // 나머지 셀들을 검정색으로 변경
-        for (index,_) in sortedLyrics.enumerated() {
-            if index != lyricsVM?.highlitedLyricIndex {
+        for index in 0..<(musicPlayerVM?.sortedLyrics.count ?? 0) {
+            if index != musicPlayerVM?.lyricIndex {
                 if let cell = lyricsTableView.cellForRow(at: IndexPath(row: index, section: 0)) as? LyricTableViewCell {
                     cell.lyricLabel.textColor = .black
                 }
@@ -111,8 +109,8 @@ extension LyricsViewController {
         }
     }
     
+    // Notification에 포함된 userInfo에서 시간 정보를 가져와서 뷰를 업데이트
     @objc func handleNotification(notification: Notification) {
-        // Notification에 포함된 userInfo에서 시간 정보를 가져와서 뷰를 업데이트
         if let currentTime = notification.userInfo?["currentTime"] as? String {
             highlightLyrics(for: currentTime)
         }
@@ -142,7 +140,7 @@ extension LyricsViewController {
         
         containerView.snp.makeConstraints {
           $0.top.leading.trailing.equalToSuperview()
-          $0.height.equalTo(50) // 버튼 높이를 고정한다면 필요한 코드입니다.
+          $0.height.equalTo(50)
         }
         
         lyricsSwitch.snp.makeConstraints {

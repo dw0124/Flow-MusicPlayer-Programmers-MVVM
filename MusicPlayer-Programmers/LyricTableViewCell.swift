@@ -21,6 +21,8 @@ class LyricTableViewCell: UITableViewCell {
         lyricLabel.textColor = .black
         lyricLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         lyricLabel.textAlignment = .left
+        lyricLabel.numberOfLines = 0
+        lyricLabel.sizeToFit()
         
         contentView.addSubview(lyricLabel)
         
