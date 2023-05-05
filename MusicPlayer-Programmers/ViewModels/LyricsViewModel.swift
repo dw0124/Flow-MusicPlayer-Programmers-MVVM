@@ -26,21 +26,4 @@ extension LyricsViewModel {
     func numberOfRowsInSection(_ section: Int) -> Int {
         return self.sortedLyrics.count
     }
-    
-    func LyricAtIndex(_ index: Int) -> LyricViewModel {
-        let Lyric = self.sortedLyrics[index]
-        return LyricViewModel(Lyric)
-    }
-    
-}
-
-// Lyric 하나만 받아옴
-struct LyricViewModel {
-    private let Lyric: String
-}
-
-extension LyricViewModel {
-    init(_ Lyric: String) {
-        self.Lyric = Lyric
-    }
 }
