@@ -14,6 +14,8 @@ class MusicPlayerViewModel {
     /// 네트워크 파싱 후 View로 완료했다는 것을 전달하기 위한 클로저
     var bindingViewModel: (() -> ()) = {}
     
+    let semaphore = DispatchSemaphore(value: 1)
+    
     var music: Music = Music(singer: "가수", album: "앨범", title: "제목", duration: 0, image: "", file: "", lyrics: "")
     
     var formatter = DateComponentsFormatter()
@@ -44,28 +46,42 @@ class MusicPlayerViewModel {
     }
     
     func getSong(url: String) {
-        if let url = URL(string: url) {
-            WebService().getData(url: url) { [weak self] (music: Music) in
-                guard let self = self else { return }
-                self.music = music
-                // Image
-                if let imageUrl = URL(string: self.music.image) {
-                    WebService().updatePhoto(with: imageUrl) { (data) in
-                        self.imageData = data
-                    }
-                }
-                // MusicFile
-                if let fileURL = URL(string: music.file) {
-                    self.playerItem = AVPlayerItem(url: fileURL)
-                    self.player = AVPlayer(playerItem: self.playerItem)
-                }
-                // Lyric
-                self.getLyric()
+        
+        guard let url = URL(string: url) else { return }
+        
+        self.semaphore.wait()
+        WebService().getData(url: url) { [weak self] (music: Music) in
+            guard let self = self else { return }
+            self.music = music
+            self.semaphore.signal()
+        }
+        
+        // Image
+        self.semaphore.wait()
+        if let imageUrl = URL(string: self.music.image) {
+            WebService().updatePhoto(with: imageUrl) { (data) in
+                self.imageData = data
+                self.semaphore.signal()
             }
         }
+        
+        // MusicFile
+        self.semaphore.wait()
+        if let fileURL = URL(string: self.music.file) {
+            self.playerItem = AVPlayerItem(url: fileURL)
+            self.player = AVPlayer(playerItem: self.playerItem)
+            self.semaphore.signal()
+        }
+        
+        // Lyric
+        self.semaphore.wait()
+        self.getLyric()
+        self.semaphore.signal()
     }
+
     
-    func getLyric() { // 노래 가사
+    // 노래 가사
+    func getLyric() {
         music.lyrics.split(separator: "\n").forEach {
             let parts = $0.dropFirst().split(separator: "]").map { String($0) }
             let time = String(parts[0].prefix(5))
@@ -98,10 +114,6 @@ class MusicPlayerViewModel {
                 break
             }
         }
-        
-//        if let lyric = lyricsDic[formattedTime] {
-//            currentLyric = lyric
-//        }
     }
     
     // 현재 노래의 재생 시간이 변경될 때마다 Notification을 실행

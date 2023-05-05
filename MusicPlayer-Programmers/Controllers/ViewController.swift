@@ -41,15 +41,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        DispatchQueue.main.async {
-            self.setUI()
-            self.musicPlayerVM.bindingViewModel = { [weak self] in
-                guard let self = self else { return }
-                self.setupDI(self.musicPlayerVM.music)
-            }
-            self.musicPlayerVM.bindingViewModel()
-            self.addPeriodicTimeObserver()
-        }
+        setUI()
+        setupDI(self.musicPlayerVM.music)
+        addPeriodicTimeObserver()
         
         slider.addTarget(musicPlayerVM, action: #selector(musicPlayerVM.onSliderValueChanged(_:)), for: .touchUpInside)
     }
