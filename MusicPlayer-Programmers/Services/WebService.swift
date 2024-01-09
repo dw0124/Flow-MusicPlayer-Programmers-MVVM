@@ -7,6 +7,9 @@
 
 import UIKit
 import Foundation
+import RxSwift
+import RxCocoa
+import NSObject_Rx
 
 class WebService {
     
@@ -47,6 +50,20 @@ class WebService {
             completion(data)
             
         }.resume()
+    }
+    
+    func fetchMusic() -> Observable<Music> {
+        
+        let urlRequest = URLRequest(url: URL(string: "https://grepp-programmers-challenges.s3.ap-northeast-2.amazonaws.com/2020-flo/song.json")!)
+        
+        let response = Observable.just(urlRequest)
+            .flatMap { URLSession.shared.rx.data(request: $0) }
+        
+        let music = response
+            .map { try JSONDecoder().decode(Music.self, from: $0) }
+            .catchAndReturn(Music(singer: "", album: "", title: "", duration: 0, image: "", file: "", lyrics: ""))
+        
+        return music
     }
     
 }
